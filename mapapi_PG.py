@@ -2,6 +2,10 @@ import pygame
 import requests
 import sys
 import os
+from button import Button
+
+
+MAP_TYPES = ['map', 'sat', 'sat,skl']
 
 
 def get_map(ll_spn=None, map_type="map", add_params=None):
@@ -36,10 +40,22 @@ def show_map(ll, spn, ll_spn=None, map_type="map", add_params=None):
     screen = pygame.display.set_mode((600, 450))
     run = True
     map_file = get_map(ll_spn, map_type, add_params)
+    change_map_type_btn_img = pygame.image.load('buttons/change_map_type.png').convert_alpha()
+    change_map_type_btn = Button(536, 386, change_map_type_btn_img, 2)
     while run:
+        screen.blit(pygame.image.load(map_file), (0, 0))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+        if change_map_type_btn.draw(screen):
+            try:
+                map_type = MAP_TYPES[MAP_TYPES.index(map_type) + 1]
+                map_file = get_map(ll_spn, map_type, add_params)
+            except IndexError:
+                map_type = MAP_TYPES[0]
+                map_file = get_map(ll_spn, map_type, add_params)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_PAGEUP] or keys[pygame.K_w]:
@@ -68,7 +84,6 @@ def show_map(ll, spn, ll_spn=None, map_type="map", add_params=None):
                 spn[1] += 0.062
                 spn = ','.join(map(str, spn))
 
-        screen.blit(pygame.image.load(map_file), (0, 0))
         pygame.display.flip()
 
     pygame.quit()
