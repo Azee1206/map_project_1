@@ -4,7 +4,7 @@ import sys
 import os
 
 
-def show_map(ll_spn=None, map_type="map", add_params=None):
+def get_map(ll_spn=None, map_type="map", add_params=None):
     if ll_spn:
         map_request = f"http://static-maps.yandex.ru/1.x/?{ll_spn}&l={map_type}"
     else:
@@ -28,17 +28,48 @@ def show_map(ll_spn=None, map_type="map", add_params=None):
     except IOError as ex:
         print("Ошибка записи временного файла:", ex)
         sys.exit(2)
+    return map_file
 
-    # Инициализируем pygame
+
+def show_map(ll, spn, ll_spn=None, map_type="map", add_params=None):
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
-    # Рисуем картинку, загружаемую из только что созданного файла.
-    screen.blit(pygame.image.load(map_file), (0, 0))
-    # Переключаем экран и ждем закрытия окна.
-    pygame.display.flip()
-    while pygame.event.wait().type != pygame.QUIT:
-        pass
+    run = True
+    map_file = get_map(ll_spn, map_type, add_params)
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_PAGEUP] or keys[pygame.K_w]:
+            spn = list(map(float, spn.split(',')))
+            spn[0] += 0.062
+            spn[1] += 0.062
+            if spn[0] < 2.5 and spn[1] < 2.5:
+                spn = ','.join(map(str, spn))
+                ll_spn = f'll={ll}&spn={spn}'
+                map_file = get_map(ll_spn, map_type, add_params)
+            else:
+                spn[0] -= 0.062
+                spn[1] -= 0.062
+                spn = ','.join(map(str, spn))
+
+        elif keys[pygame.K_PAGEDOWN] or keys[pygame.K_s]:
+            spn = list(map(float, spn.split(',')))
+            spn[0] -= 0.062
+            spn[1] -= 0.062
+            if spn[0] > 0 and spn[1] > 0:
+                spn = ','.join(map(str, spn))
+                ll_spn = f'll={ll}&spn={spn}'
+                map_file = get_map(ll_spn, map_type, add_params)
+            else:
+                spn[0] += 0.062
+                spn[1] += 0.062
+                spn = ','.join(map(str, spn))
+
+        screen.blit(pygame.image.load(map_file), (0, 0))
+        pygame.display.flip()
 
     pygame.quit()
-    # Удаляем за собой файл с изображением.
     os.remove(map_file)
