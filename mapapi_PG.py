@@ -140,7 +140,6 @@ def show_map(ll, spn, ll_spn=None, map_type="map", add_params=None):
                 ll[0] += MAP_MOVING_SPEED
                 ll = ','.join(map(str, ll))
 
-        screen.blit(pygame.image.load(map_file), (0, 0))
         pygame.display.flip()
 
     pygame.quit()
