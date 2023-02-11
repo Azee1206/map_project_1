@@ -4,7 +4,7 @@ import sys
 import os
 
 
-MAP_MOVING_SPEED = 0.5
+MAP_MOVING_SPEED = 0.24
 SPN_CHANGING_SPEED = 0.062
 MAX_SPN = 5
 
