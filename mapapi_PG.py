@@ -133,51 +133,64 @@ def show_map(ll, spn, ll_spn=None, map_type="map", add_params=None):
         # Изменение положения карты (ll)
         # Движение в северном направлении
         if keys[pygame.K_UP]:
+            spn = list(map(float, spn.split(',')))
             ll = list(map(float, ll.split(',')))
-            ll[1] += MAP_MOVING_SPEED
+            ll[1] += spn[1] * 2
             if ll[1] < 80:
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
                 ll_spn = f'll={ll}&spn={spn}'
                 map_file = get_map(ll_spn, map_type, add_params)
             else:
-                ll[1] -= MAP_MOVING_SPEED
+                ll[1] -= spn[1] * 2
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
 
         # Движение в южном направлении
         elif keys[pygame.K_DOWN]:
+            spn = list(map(float, spn.split(',')))
             ll = list(map(float, ll.split(',')))
-            ll[1] -= MAP_MOVING_SPEED
+            ll[1] -= spn[1] * 2
             if ll[1] > -80:
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
                 ll_spn = f'll={ll}&spn={spn}'
                 map_file = get_map(ll_spn, map_type, add_params)
             else:
-                ll[1] += MAP_MOVING_SPEED
+                ll[1] += spn[1] * 2
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
+
 
         # Движение в восточном направлении
         elif keys[pygame.K_RIGHT]:
+            spn = list(map(float, spn.split(',')))
             ll = list(map(float, ll.split(',')))
-            ll[0] += MAP_MOVING_SPEED
+            ll[0] += spn[0] * 2
             if ll[0] < 179:
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
                 ll_spn = f'll={ll}&spn={spn}'
                 map_file = get_map(ll_spn, map_type, add_params)
             else:
-                ll[0] -= MAP_MOVING_SPEED
+                ll[0] -= spn[0] * 2
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
 
         # Движение в западном направлении
         elif keys[pygame.K_LEFT]:
+            spn = list(map(float, spn.split(',')))
             ll = list(map(float, ll.split(',')))
-            ll[0] -= MAP_MOVING_SPEED
+            ll[0] -= spn[0] * 2
             if ll[0] > -179:
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
                 ll_spn = f'll={ll}&spn={spn}'
                 map_file = get_map(ll_spn, map_type, add_params)
             else:
-                ll[0] += MAP_MOVING_SPEED
+                ll[0] += spn[0] * 2
                 ll = ','.join(map(str, ll))
+                spn = ','.join(map(str, spn))
 
         pygame.display.flip()
 
